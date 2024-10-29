@@ -24,10 +24,10 @@ from . import dag
 
 
 def cov(
-    x_samples: npt.NDArray[np.float_],
-    y_samples: npt.NDArray[np.float_] | None = None,
+    x_samples: npt.NDArray[np.floating],
+    y_samples: npt.NDArray[np.floating] | None = None,
     center_data: bool = True,
-) -> npt.NDArray[np.float_]:
+) -> npt.NDArray[np.floating]:
     """Computes batch covariance.
 
     - Input shapes: `(..., nsamples, n)` and `(..., nsamples, m)`
@@ -54,8 +54,8 @@ def cov(
 
 
 def gaussian_score_est(
-    x_samples: npt.NDArray[np.float_],
-) -> Callable[[npt.NDArray[np.float_]], npt.NDArray[np.float_]]:
+    x_samples: npt.NDArray[np.floating],
+) -> Callable[[npt.NDArray[np.floating]], npt.NDArray[np.floating]]:
     """Estimates score function of multivariate Gaussian R.V.s using inverse covariance.
 
     - Input shape: `(nsamples, n, 1)`
@@ -65,8 +65,8 @@ def gaussian_score_est(
     neg_x_precision_mat = -np.linalg.inv(cov(x_samples[:, :, 0]))
 
     def score_est(
-        x_samples: npt.NDArray[np.float_],
-    ) -> npt.NDArray[np.float_]:
+        x_samples: npt.NDArray[np.floating],
+    ) -> npt.NDArray[np.floating]:
         return neg_x_precision_mat @ x_samples
 
     return score_est

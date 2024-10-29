@@ -187,7 +187,7 @@ if __name__ == "__main__":
                 # 1: Uniformly random selection of column subspace
                 # TODO: Theoretically ensure this is indeed uniform
                 import scipy.stats  # type: ignore
-                decoder_q: npt.NDArray[np.float_] = scipy.stats.ortho_group(d, np_rng).rvs()[:, :n]  # type: ignore
+                decoder_q: npt.NDArray[np.floating] = scipy.stats.ortho_group(d, np_rng).rvs()[:, :n]  # type: ignore
 
                 # 2: Random mixing within the subspace
                 decoder_r = np_rng.random((n, n)) - 0.5
@@ -279,16 +279,16 @@ if __name__ == "__main__":
                     basis_of_x_supp = xsc_eigvec[:, -n:]
                     x_samples_n = basis_of_x_supp.T @ x_samples
 
-                    hat_sx_fns = list[Callable[[npt.NDArray[np.float_]], npt.NDArray[np.float_]]]()
+                    hat_sx_fns = list[Callable[[npt.NDArray[np.floating]], npt.NDArray[np.floating]]]()
                     for i in range(len(envs)):
                         # If we know the latent model is Linear Gaussian, score estimation
                         # is essentially just precision matrix --- a parameter --- estimation
                         hat_sx_fn_i_n = utils.gaussian_score_est(x_samples_n[i])
                         def hat_sx_fn_i(
-                            x_in: npt.NDArray[np.float_],
+                            x_in: npt.NDArray[np.floating],
                             # python sucks... capture value with this since loops are NOT scopes
-                            hat_sx_fn_i_n: Callable[[npt.NDArray[np.float_]], npt.NDArray[np.float_]] = hat_sx_fn_i_n,
-                        ) -> npt.NDArray[np.float_]:
+                            hat_sx_fn_i_n: Callable[[npt.NDArray[np.floating]], npt.NDArray[np.floating]] = hat_sx_fn_i_n,
+                        ) -> npt.NDArray[np.floating]:
                             """Reduce input down to support of x, compute estimate, transform the result back up."""
                             return basis_of_x_supp @ hat_sx_fn_i_n(basis_of_x_supp.T @ x_in)
                         hat_sx_fns.append(hat_sx_fn_i)

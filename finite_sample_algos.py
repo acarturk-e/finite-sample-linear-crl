@@ -13,7 +13,7 @@ import numpy as np
 import numpy.typing as npt
 
 
-def causal_order_estimation(dsx_cor: npt.NDArray[np.float_]) -> npt.NDArray[np.int_]:
+def causal_order_estimation(dsx_cor: npt.NDArray[np.floating]) -> npt.NDArray[np.int_]:
     n, d, _ = dsx_cor.shape
     logging.debug(f"Starting `_causal_order_est`.")
 
@@ -37,7 +37,7 @@ def causal_order_estimation(dsx_cor: npt.NDArray[np.float_]) -> npt.NDArray[np.i
 
 
 def graph_estimation(
-    rxs: npt.NDArray[np.float_],
+    rxs: npt.NDArray[np.floating],
     top_order: npt.NDArray[np.int_],
     atol_eigv: float,
     atol_orth: float
@@ -58,8 +58,8 @@ def graph_estimation(
         # Find vt's column space
         cm = np.sum(rxs[vts[t]], 0)
         cm_eig = np.linalg.eigh(cm)
-        cm_eigval: npt.NDArray[np.float_] = cm_eig.eigenvalues
-        cm_eigvec: npt.NDArray[np.float_] = cm_eig.eigenvectors
+        cm_eigval: npt.NDArray[np.floating] = cm_eig.eigenvalues
+        cm_eigvec: npt.NDArray[np.floating] = cm_eig.eigenvectors
         cm_rank = np.sum(cm_eigval > atol_eigv, dtype=np.int_)
         logging.debug(f"Rank of vt column space: {cm_rank}")
         vt_colb = cm_eigvec[:, -(t + 1) :]
@@ -75,8 +75,8 @@ def graph_estimation(
             else:
                 cm = np.sum(rxs[mtj], 0)
                 cm_eig = np.linalg.eigh(cm)
-                cm_eigval: npt.NDArray[np.float_] = cm_eig.eigenvalues
-                cm_eigvec: npt.NDArray[np.float_] = cm_eig.eigenvectors
+                cm_eigval: npt.NDArray[np.floating] = cm_eig.eigenvalues
+                cm_eigvec: npt.NDArray[np.floating] = cm_eig.eigenvectors
                 cm_rank = np.sum(cm_eigval > atol_eigv, dtype=np.int_)
 
                 logging.debug(f"{j = }, rank of mtj: {cm_rank}")
@@ -94,7 +94,7 @@ def graph_estimation(
     return hat_g_s
 
 
-def encoder_estimation(dsx_cor: npt.NDArray[np.float_], atol_eigv: float) -> npt.NDArray[np.float_]:
+def encoder_estimation(dsx_cor: npt.NDArray[np.floating], atol_eigv: float) -> npt.NDArray[np.floating]:
     n, d, _ = dsx_cor.shape
     logging.debug(f"Starting `_encoder_est`.")
     logging.debug(f"{atol_eigv = }")
@@ -104,8 +104,8 @@ def encoder_estimation(dsx_cor: npt.NDArray[np.float_], atol_eigv: float) -> npt
     for t in range(n):
         # Find column space of t
         cm_eig = np.linalg.eigh(dsx_cor[t])
-        cm_eigval: npt.NDArray[np.float_] = cm_eig.eigenvalues
-        cm_eigvec: npt.NDArray[np.float_] = cm_eig.eigenvectors
+        cm_eigval: npt.NDArray[np.floating] = cm_eig.eigenvalues
+        cm_eigvec: npt.NDArray[np.floating] = cm_eig.eigenvectors
         cm_rank = np.sum(cm_eigval > atol_eigv, dtype=np.int_)
         logging.debug(f"Rank of t column space: {cm_rank}")
         t_colb = cm_eigvec[:, -(t + 1) :]
