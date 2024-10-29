@@ -286,37 +286,41 @@ if not is_notebook:
 g.figure.savefig(run_dir + "dsx_rmse_vs_nsamples.png")
 
 #%%
-# Visualize performance vs dsx_rmse
+# Visualize performance vs dsx_mse
 
-g = sns.lmplot(
-    data=pd.DataFrame([correct_graph_rate, dsx_mse ** 0.5]).T.reset_index(level="n"),#.unstack("n"),
+plt.figure(figsize=(7.5,5))
+ax = sns.scatterplot(
+    data=pd.DataFrame([correct_graph_rate, dsx_mse]).T.reset_index(level="n").filter(like="15", axis=0),
     x="dsx_mse_over_nruns",
     y="correct_graph_rate",
     hue="n",
-    scatter_kws={"s": markersize ** 2},
-    lowess=True,
-    aspect=1.5,
+    style="n",
+    s=markersize ** 2,
+    palette=sns.color_palette(),
     markers=["D", "o", "X"] if len(analysis_df.index.levels[1]) == 3 else "o",
 )
-g.ax.tick_params(axis='both', which='major', labelsize=xticks_size)
-g.legend.remove()
-# g.ax.set_title('Graph recovery probability vs score estimation error')
-g.ax.set_xlabel('Score estimation MSE', size=xlabel_size)
-g.ax.set_ylabel('Graph recovery rate', size=ylabel_size)
-g.ax.legend(fontsize=legend_size, loc='upper right')
+g = ax.get_figure()
+assert g is not None
 
-for t in g.ax.get_legend().get_texts():
+ax.tick_params(axis='both', which='major', labelsize=xticks_size)
+ax.get_legend().remove()
+# ax.set_title('Graph recovery probability vs score estimation error')
+ax.set_xlabel('Score estimation MSE', size=xlabel_size)
+ax.set_ylabel('Graph recovery rate', size=ylabel_size)
+ax.legend(fontsize=legend_size, loc='upper right')
+
+for t in ax.get_legend().get_texts():
     t.set_text("$n=" + t.get_text() + "$")
 
 g.figure.tight_layout()
-# g.ax.grid()
-g.ax.xaxis.set_major_formatter(ScalarFormatter(useMathText=False))
+# ax.grid()
+ax.xaxis.set_major_formatter(ScalarFormatter(useMathText=False))
 
-g.ax.set_ylim(bottom=-0.1, top=1.1)
-g.ax.set_xscale('log')
+ax.set_ylim(bottom=-0.1, top=1.1)
+ax.set_xscale('log')
 if not is_notebook:
-    g.figure.show()
-g.figure.savefig(run_dir + "graph_rec_vs_dsx_rmse.png")
+    g.show()
+g.savefig(run_dir + "graph_rec_vs_dsx_mse_d_eq_15.png")
 
 #%%
 if not is_notebook:
